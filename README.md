@@ -13,7 +13,7 @@ Original HKU JMSC codes: https://github.com/JMSCHKU/LegcoCouncilVotes
 Installation Example
 --------------------
 
-$ virtualenv legcovotesenv
+$ virtualenv legcovotesenv  
 $ source legcovotesenv/bin/activate  
 $ pip install scrapy  
 $ git clone https://github.com/sammyfung/legcovotes.git  
