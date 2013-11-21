@@ -17,7 +17,7 @@ $ virtualenv legcovotesenv
 $ source legcovotesenv/bin/activate  
 $ pip install scrapy  
 $ git clone https://github.com/sammyfung/legcovotes.git  
-$ cd legcovotes/legcovotes
+$ cd legcovotes/legcovotes  
 $ scrapy crawl legcovotes -t json -o testresult  
 
 
