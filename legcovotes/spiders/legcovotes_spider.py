@@ -33,19 +33,35 @@ class LegcovotesSpider(CrawlSpider):
 
         for vote in votes:
             councilvote = VoteItem()
-            councilvote["number"] = vote.select('@number').extract()
-            councilvote["date"] = vote.select('vote-date/text()').extract()
-            councilvote["time"] = vote.select('vote-time/text()').extract()
-            councilvote["motion_ch"] = vote.select('motion-ch/text()').extract()
-            councilvote["motion_en"] = vote.select('motion-en/text()').extract()
-            councilvote["mover_ch"] = vote.select('mover-ch/text()').extract()
-            councilvote["mover_en"] = vote.select('mover-en/text()').extract()
-            councilvote["type"] = vote.select('mover-type/text()').extract()
-            councilvote["separate_mechanism"] = vote.select('vote-separate-mechanism/text()').extract()
+            votenum = int(vote.select('@number').extract()[0])
+            councilvote["number"] = int(votenum)
+            councilvote["date"] = vote.select('vote-date/text()').extract()[0]
+            councilvote["time"] = vote.select('vote-time/text()').extract()[0]
+            councilvote["motion_ch"] = vote.select('motion-ch/text()').extract()[0]
+            councilvote["motion_en"] = vote.select('motion-en/text()').extract()[0]
+            councilvote["mover_ch"] = vote.select('mover-ch/text()').extract()[0]
+            councilvote["mover_en"] = vote.select('mover-en/text()').extract()[0]
+            councilvote["mover_type"] = vote.select('mover-type/text()').extract()[0]
+            councilvote["separate_mechanism"] = vote.select('vote-separate-mechanism/text()').extract()[0]
+            if councilvote["separate_mechanism"] == 'Yes':
+                mechanism = ['functional-constituency', 'geographical-constituency']
+            else:
+                mechanism = ['overall']
+            for constituency in mechanism:
+                if constituency == 'functional-constituency':
+                    short = 'fc_'
+                elif constituency == 'geographical-constituency':
+                    short = 'gc_'
+                else:
+                    short = ''
+                for count_type in ['present', 'vote', 'yes', 'no', 'abstain']:
+                    councilvote[short+count_type] = int(vote.select('vote-summary/'+constituency+'/'+count_type+'-count/text()').extract()[0])
+                councilvote[short+'result'] = vote.select('vote-summary/'+constituency+'/'+'result/text()').extract()[0]
+            councilvote['result'] = vote.select('vote-summary/overall/result/text()').extract()[0]
+
 
             items.append(councilvote)
 
-            votenum = int(vote.select('@number').extract()[0])
             members = xxs.select('//meeting/vote[%s]/individual-votes/member'%votenum)
             for member in members:
                 individualvote = IndividualVoteItem()
