@@ -67,10 +67,10 @@ class LegcovotesSpider(CrawlSpider):
                 individualvote = IndividualVoteItem()
                 individualvote['number'] = councilvote["number"]
                 individualvote['date'] = councilvote["date"]
-                individualvote['name_ch'] = member.select('@name-ch').extract()
-                individualvote['name_en'] = member.select('@name-en').extract()
-                individualvote['constituency'] = member.select('@constituency').extract()
-                individualvote['vote'] = member.select('vote/text()').extract()
+                individualvote['name_ch'] = member.select('@name-ch').extract()[0]
+                individualvote['name_en'] = member.select('@name-en').extract()[0]
+                individualvote['constituency'] = member.select('@constituency').extract()[0]
+                individualvote['vote'] = member.select('vote/text()').extract()[0]
 
                 items.append(individualvote)
 
